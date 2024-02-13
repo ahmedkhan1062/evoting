@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
@@ -21,33 +22,48 @@ class person:
         
     #Method to check validity of SA id number
     def checkID(self):
-        # Check if the ID number is 13 digits long
+        # Check if the ID number is of correct length
         if len(self.id) != 13:
             return False
-
-        # Check if all characters in the ID number are digits
-        if not self.id.isdigit():
+        
+        # Extract components of the ID number
+        dob = self.id[:6]
+        gender = int(self.id[6:10])
+        citizenship_status = int(self.id[10])
+        
+        # Check if components are valid
+        try:
+            dob_year = int(dob[:2])
+            dob_month = int(dob[2:4])
+            dob_day = int(dob[4:6])
+            
+            if not (0 < dob_month <= 12):
+                return False
+            
+            if not (0 < dob_day <= 31):
+                return False
+            
+            # Handle leap year for February
+            if dob_month == 2 and dob_day > 29:
+                return False
+            
+           
+            # Check if year is in valid range
+            current_year = int(datetime.now().strftime("%Y")[-2:])
+            #if not (current_year - 100 <= dob_year <= current_year):
+                #return False
+            print("bot")
+            # Check if gender number is in correct range
+            if not (0 <= gender <= 9999):
+                return False
+            
+            # Check if citizenship status is valid
+            if not (citizenship_status in [0, 1]):
+                return False
+            
+            return True
+            
+        except ValueError:
             return False
 
-        # Extract the date portion from the ID number
-        date_part = self.id[:6]
-
-        # Extract the citizenship digit
-        citizenship = int(self.id[10])
-
-        # Extract the last digit (checksum)
-        checksum = int(self.id[-1])
-
-        # Perform ID number validation algorithm
-        weights = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
-        checksum_calc = sum(int(digit) * weight for digit, weight in zip(self.id[:-1], weights))
-
-        # Calculate the expected checksum
-        expected_checksum = (10 - (checksum_calc % 10)) % 10
-
-        # Special case for citizenship = 0
-        if citizenship == 0:
-            return checksum == expected_checksum
-
-        # Check if the expected checksum matches the actual checksum
-        return checksum == expected_checksum
+            

@@ -1,8 +1,24 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from .models import person
 import json
+
+from firebase_admin import db
+from firebase_admin import firestore
+
+# Get a Firestore client
+db = firestore.client()
+
+# Get a database reference
+#ref = db.reference('/')
+
+# Read data
+#data = ref.get()
+
+# Write data
+#ref.set({'key': 'value'})
 
 def index(request):
     return render(request, "index.html")
@@ -15,6 +31,8 @@ def register(request):
 
 def login(request):
     return render(request, "page_login.html")
+
+
 
 def recieveRegistration(request):
     if request.method == 'POST':
@@ -39,16 +57,25 @@ def recieveRegistration(request):
         
         voter = person(firstname, surname, idnumber, email, password, conPass)
         
-        if voter.checkID() == True:
-            return redirect('page_vote')
-        else:
+        
+        if voter.checkID() == False:
             return JsonResponse({'message': 'Please enter a valid South African identification number'}, status = 400)
         
         
-        if voter.checkPassword() == True:
-             return redirect('page_vote')
-        else:
+        elif voter.checkPassword() == False:
             return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
+        
+        else: 
+            data = {
+                'firstName': firstname,
+                'secondName': surname,
+                'id': idnumber,
+                'email': email,
+                'password': password,
+                
+                }
+            
+            db.collection("People").document(idnumber).set(data)
     else:
         return JsonResponse({'error': 'Invalid request method'})
     

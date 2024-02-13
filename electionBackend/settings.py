@@ -16,8 +16,8 @@ from pathlib import Path
 
 from firebase_admin import credentials
 
-cred = credentials.certificate("path/to/serviceAccountKey.json")
-
+cred = credentials.Certificate("electionBackend/keys/evoting-93a7c-firebase-adminsdk-q9dd6-8466ec9400.json")
+firebase_admin.initialize_app(cred)
 CSRF_COOKIE_SECURE = True
 
 # Set CSRF_COOKIE_HTTPONLY to False if you're accessing the CSRF token via JavaScript
