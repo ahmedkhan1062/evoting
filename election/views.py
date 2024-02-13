@@ -35,12 +35,14 @@ def recieveRegistration(request):
         idnumber = posted_data['idnumber']
         email= posted_data['email']
         password= posted_data['password']
+        conPass= posted_data['confirmpass']
         
-        voter = person(firstname, surname, idnumber, email, password)
+        voter = person(firstname, surname, idnumber, email, password, conPass)
         
-        print(voter.firstname)
-        
-        return redirect('page_vote')
+        if voter.checkPassword() == True:
+             return redirect('page_vote')
+        else:
+            return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
     else:
         return JsonResponse({'error': 'Invalid request method'})
     

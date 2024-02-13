@@ -665,9 +665,20 @@
   max-width: 800px;
 }
 
+
 #fName, #sName, #ID, #Email, #Password, #ConfirmPassword{
   background-color: #F5F5F5;
+}
 
+input.error {
+  border: 2px solid #ff0000 !important;
+}
+
+.error-message {
+  color: #ff0000; 
+  font-size: 1.1em; 
+  font-style: strong; 
+  padding: 10px;
 }
 
 </style>
@@ -709,10 +720,13 @@
 
                         <div class="col-12 form-group mb-3" data-for="Password">
                           <input type="password" name="password" placeholder="Password" data-form-field="password" class="form-control" value="" id="Password">
-                      </div>
+                          
+                        </div>
 
                       <div class="col-12 form-group mb-3" data-for="ConfirmPassword">
                         <input type="password" name="confirmpassword" placeholder="Confirm Password" data-form-field="password" class="form-control" value="" id="ConfirmPassword">
+                        <br>
+                        <span id="passwordError" class="error-message"></span>
                     </div>
                         
                         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "submitButton" type="submit" class="btn btn-primary display-7">Register</button></div>
@@ -748,7 +762,9 @@
                                     })
                                     .then(response => response.json())
                                     .then(data => {
-                                        document.getElementById('resultContainer').innerText = data.message;
+                                        document.getElementById('passwordError').innerText = data.message;
+                                        document.getElementById('Password').classList.add('error');
+                                        document.getElementById('ConfirmPassword').classList.add('error');
                                     })
                                     .catch(error => console.error('Error:', error));
                                 });
