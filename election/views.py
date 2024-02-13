@@ -39,6 +39,12 @@ def recieveRegistration(request):
         
         voter = person(firstname, surname, idnumber, email, password, conPass)
         
+        if voter.checkID() == True:
+            return redirect('page_vote')
+        else:
+            return JsonResponse({'message': 'Please enter a valid South African identification number'}, status = 400)
+        
+        
         if voter.checkPassword() == True:
              return redirect('page_vote')
         else:

@@ -706,25 +706,27 @@ input.error {
 
                       {% csrf_token %}
                         <div class="col-md col-sm-12 form-group mb-3" data-for="Firstname">
-                            <input type="text" name="name" background-color = "yellow" placeholder="First Name" data-form-field="name" class="form-control" value="" id="fName">
+                            <input type="text" name="name" background-color = "yellow" placeholder="First Name" data-form-field="name" class="form-control" value="" id="fName" required>
                         </div>
                         <div class="col-md col-sm-12 form-group mb-3" data-for="Surname">
-                            <input type="text" name="email" placeholder="Surname" data-form-field="name" class="form-control" value="" id="sName">
+                            <input type="text" name="email" placeholder="Surname" data-form-field="name" class="form-control" value="" id="sName" required>
                         </div>
                         <div class="col-12 form-group mb-3" data-for="IDNumber">
-                            <input type="idNumber" name="url" placeholder="South African Identification Number" data-form-field="idNumber" class="form-control" value="" id="ID">
-                        </div>
+                            <input type="idNumber" name="url" placeholder="South African Identification Number" data-form-field="idNumber" class="form-control" value="" id="ID" required>
+                            <br>
+                            <span id="idError" class="error-message"></span>
+                          </div>
 						            <div class="col-12 form-group mb-3" data-for="Email">
-                            <input type="email" name="url" placeholder="Email Address" data-form-field="email" class="form-control" value="" id="Email">
+                            <input type="email" name="url" placeholder="Email Address" data-form-field="email" class="form-control" value="" id="Email" required>
                         </div>
 
                         <div class="col-12 form-group mb-3" data-for="Password">
-                          <input type="password" name="password" placeholder="Password" data-form-field="password" class="form-control" value="" id="Password">
+                          <input type="password" name="password" placeholder="Password" data-form-field="password" class="form-control" value="" id="Password" required>
                           
                         </div>
 
                       <div class="col-12 form-group mb-3" data-for="ConfirmPassword">
-                        <input type="password" name="confirmpassword" placeholder="Confirm Password" data-form-field="password" class="form-control" value="" id="ConfirmPassword">
+                        <input type="password" name="confirmpassword" placeholder="Confirm Password" data-form-field="password" class="form-control" value="" id="ConfirmPassword" required>
                         <br>
                         <span id="passwordError" class="error-message"></span>
                     </div>
@@ -762,10 +764,17 @@ input.error {
                                     })
                                     .then(response => response.json())
                                     .then(data => {
+
+                                      if (data.message === "Please enter a valid South African identification number") {
+                                        document.getElementById('idError').innerText = data.message;
+                                        document.getElementById('ID').classList.add('error');
+                                    }
+                                      else if (data.message === "Please ensure that the passwords match"){
                                         document.getElementById('passwordError').innerText = data.message;
                                         document.getElementById('Password').classList.add('error');
-                                        document.getElementById('ConfirmPassword').classList.add('error');
+                                        document.getElementById('ConfirmPassword').classList.add('error')};
                                     })
+                                    
                                     .catch(error => console.error('Error:', error));
                                 });
 

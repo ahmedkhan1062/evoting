@@ -10,8 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import firebase_admin.credentials
+
 from pathlib import Path
 
+from firebase_admin import credentials
+
+cred = credentials.certificate("path/to/serviceAccountKey.json")
 
 CSRF_COOKIE_SECURE = True
 
