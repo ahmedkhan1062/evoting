@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from .models import person
+from .models import LoginRequest
 import json
 
 from firebase_admin import db
@@ -13,7 +14,13 @@ db = firestore.client()
 
 # Get a database reference
 #ref = db.reference('/')
-
+signedPic = "assets/images/usersign.jpg"
+guestPic = "assets/images/userpic.jpg"
+context = {
+                'auth' : False,
+                'username': "Guest",
+                'signedPic': guestPic,
+                        }
 # Read data
 #data = ref.get()
 
@@ -21,16 +28,17 @@ db = firestore.client()
 #ref.set({'key': 'value'})
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "index.html", context)
 
 def vote(request):
-    return render(request, "page_vote.html")
+    return render(request, "page_vote.html", context)
 
 def register(request):
-    return render(request, "page_register.html")
+    return render(request, "page_register.html", context)
 
 def login(request):
-    return render(request, "page_login.html")
+    
+    return render(request, "page_login.html", context)
 
 
 
@@ -66,25 +74,17 @@ def recieveRegistration(request):
             return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
         
         else: 
-            data = {
-                'firstName': firstname,
-                'secondName': surname,
-                'id': idnumber,
-                'email': email,
-                'password': password,
+            #print(voter.postNewUserToDatabase())
+            if voter.postNewUserToDatabase() == "Exists":
+                return JsonResponse({'message': 'Your account already exists, please try logging in'}, status = 400)
                 
-                }
-            
-            db.collection("People").document(idnumber).set(data)
     else:
         return JsonResponse({'error': 'Invalid request method'})
     
     
 def recieveLogin(request):
     if request.method == 'POST':
-        
-        
-        
+         
         # Process the data as needed
         response_data = {'message': 'Data received and processed successfully'}
         
@@ -98,10 +98,23 @@ def recieveLogin(request):
         
         
         idnumber = posted_data['idnumber']
+        password = posted_data['password']
         
-        
-        
-        print(posted_data)
+        if LoginRequest.confirmLogin(idnumber, password) == "Success":
+            global status 
+            status = "sign" 
+            global context
+            context = {
+                'auth': True,
+                'username': LoginRequest.fetchUser(idnumber),
+                'signedPic': signedPic,
+                        }
+            #return render(request, 'page_login.html', context)
+            return JsonResponse({'message': 'GoVote'})
+        else:
+            return JsonResponse({'message': 'Incorrect ID number or password'}, status = 400)
+            
+            
         
         return JsonResponse(response_data)
     else:

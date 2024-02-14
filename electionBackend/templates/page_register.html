@@ -620,20 +620,26 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
           <li class="nav-item">
+            <a class="nav-link link text-black display-4" href="{% url 'page_vote' %}">Vote</a>
+          </li>
+          <li class="nav-item">
+            {% if auth %}
+            <a class="nav-link link text-black display-4" href="{% url 'index' %}">Sign Out</a>
+          </li>
+          <li class="nav-item">
+            {% else %}
             <a class="nav-link link text-black display-4" href="{% url 'page_login' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link link text-black display-4" href="{% url 'page_register' %}"
               aria-expanded="false">Register</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link link text-black display-4" href="{% url 'page_vote' %}">Vote</a>
-          </li>
+          {% endif %}
         </ul>
         <div> <a href="{% url 'index' %}">
-						<img src="{% static 'assets/images/userpic.jpg' %}" style="height: 3.3rem; width: 3.3rem; text-align: right;">
+						<img src="{% static signedPic %}" style="height: 3.3rem; width: 3.3rem; text-align: right;">
 			</a>
-			<h6 style = "text-align: center;">Guest</h6>
+			<h6 style = "text-align: center;">{{ username|default:"Guest" }}</h6>
       </div>
     </div>
   </nav>
@@ -679,6 +685,7 @@ input.error {
   font-size: 1.1em; 
   font-style: strong; 
   padding: 10px;
+  text-align: center;
 }
 
 </style>
@@ -730,7 +737,8 @@ input.error {
                         <br>
                         <span id="passwordError" class="error-message"></span>
                     </div>
-                        
+                    <br>
+                    <span id="LoginError" class="error-message"></span>
                         <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "submitButton" type="submit" class="btn btn-primary display-7">Register</button></div>
 
 
@@ -770,10 +778,24 @@ input.error {
                                         document.getElementById('ID').classList.add('error');
                                     }
                                       else if (data.message === "Please ensure that the passwords match"){
+                                        document.getElementById('ID').classList.remove('error');
+                                        document.getElementById('idError').innerText = "";
                                         document.getElementById('passwordError').innerText = data.message;
                                         document.getElementById('Password').classList.add('error');
-                                        document.getElementById('ConfirmPassword').classList.add('error')};
-                                    })
+                                          document.getElementById('ConfirmPassword').classList.add('error');}
+                                          
+
+                                        else if (data.message === "Your account already exists, please try logging in"){
+                                          document.getElementById('LoginError').innerText = data.message;
+                                          document.getElementById('passwordError').innerText = "";
+                                          document.getElementById('idError').innerText = "";
+                                          document.getElementById('ID').classList.remove('error');
+                                          document.getElementById('Password').classList.remove('error');
+                                          document.getElementById('ConfirmPassword').classList.remove('error');
+                                      };
+                                    }
+                                      
+                                    )
                                     
                                     .catch(error => console.error('Error:', error));
                                 });

@@ -620,20 +620,26 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
           <li class="nav-item">
+            <a class="nav-link link text-black display-4" href="{% url 'page_vote' %}">Vote</a>
+          </li>
+          <li class="nav-item">
+            {% if auth %}
+            <a class="nav-link link text-black display-4" href="{% url 'index' %}">Sign Out</a>
+          </li>
+          <li class="nav-item">
+            {% else %}
             <a class="nav-link link text-black display-4" href="{% url 'page_login' %}">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link link text-black display-4" href="{% url 'page_register' %}"
               aria-expanded="false">Register</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link link text-black display-4" href="{% url 'page_vote' %}">Vote</a>
-          </li>
+          {% endif %}
         </ul>
         <div> <a href="{% url 'index' %}">
-						<img src="{% static 'assets/images/userpic.jpg' %}" style="height: 3.3rem; width: 3.3rem; text-align: right;">
+						<img src="{% static signedPic %}"  style="height: 3.3rem; width: 3.3rem; text-align: right;">
 			</a>
-			<h6 style = "text-align: center;">Guest</h6>
+			<h6 style = "text-align: center;">{{ username|default:"Guest" }}</h6>
       </div>
       </div>
     </div>
@@ -726,6 +732,10 @@
                                     })
                                     .then(response => response.json())
                                     .then(data => {
+                                      if (data.message === "GoVote") {
+                                        window.location.href = "{% url 'page_vote' %}";
+                                    }
+
                                         document.getElementById('resultContainer').innerText = data.message;
                                     })
                                     .catch(error => console.error('Error:', error));

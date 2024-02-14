@@ -1,5 +1,10 @@
 from datetime import datetime
 from django.db import models
+from firebase_admin import db
+from firebase_admin import firestore
+
+# Get a Firestore client
+db = firestore.client()
 
 # Create your models here.
 class person:
@@ -65,5 +70,55 @@ class person:
             
         except ValueError:
             return False
+        
+    def postNewUserToDatabase(self):
+        data = {
+                'firstName': self.firstname,
+                'secondName': self.surname,
+                'id': self.id,
+                'email': self.email,
+                'password': self.password,
+                
+                }
+            
+        newUser = db.collection("People").document(self.id)
+        if newUser.get().exists:
+            return "Exists"
+        else:
+            newUser.set(data)
+            return "Success"
+        
+        
+class LoginRequest:
+       
+    def confirmLogin( userID, userPassword):
+        document = db.collection('People').document(userID)
+
+        # Get the document snapshot
+        doc_values = document.get()
+
+        # Check if the document exists
+        if doc_values.exists:
+            # Get the value of the specified field
+            savedPassword = doc_values.get('password')
+            if savedPassword == userPassword:
+                return "Success"
+            else:
+                return "Error"
+            
+    def fetchUser(userID):
+        document = db.collection('People').document(userID)
+
+        # Get the document snapshot
+        doc_values = document.get()
+
+        # Check if the document exists
+        if doc_values.exists:
+            # Get the value of the specified field
+            username = doc_values.get('firstName')
+            return username
+        else:
+            return "Guest"
+        
 
             
