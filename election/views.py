@@ -40,7 +40,17 @@ def login(request):
     
     return render(request, "page_login.html", context)
 
-
+def signOut(request):
+    if request.method == 'POST':
+        global context
+        context = {
+            'auth': False,
+            'username': "Guest",
+            'signedPic': guestPic,
+                    }
+        return JsonResponse({'message': 'GoVote'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
 
 def recieveRegistration(request):
     if request.method == 'POST':

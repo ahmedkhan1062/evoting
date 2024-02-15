@@ -26,6 +26,9 @@
   
 
   <style>:root{ --background: #EEF1F4; --dominant-color: #577590; --primary-color: #F3722C; --secondary-color: #43AA8B; --success-color: #25C77C; --danger-color: #C92333; --warning-color: #ECB100; --info-color: #0CBCE0; --background-text: #000000; --dominant-text: #FFFFFF; --primary-text: #000000; --secondary-text: #FFFFFF; --success-text: #000000; --danger-text: #FFFFFF; --warning-text: #000000; --info-text: #000000;}</style>
+
+  
+
 </head>
 <body>
 
@@ -624,7 +627,7 @@
           </li>
           <li class="nav-item">
             {% if auth %}
-            <a class="nav-link link text-black display-4" href="{% url 'index' %}">Sign Out</a>
+            <a class="nav-link link text-black display-4" href="{% url 'index' %}" onclick="confirmSignOut()">Sign Out</a>
           </li>
           <li class="nav-item">
             {% else %}

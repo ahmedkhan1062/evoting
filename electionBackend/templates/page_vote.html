@@ -26,6 +26,27 @@
   
 
   <style>:root{ --background: #EEF1F4; --dominant-color: #577590; --primary-color: #F3722C; --secondary-color: #43AA8B; --success-color: #25C77C; --danger-color: #C92333; --warning-color: #ECB100; --info-color: #0CBCE0; --background-text: #000000; --dominant-text: #FFFFFF; --primary-text: #000000; --secondary-text: #FFFFFF; --success-text: #000000; --danger-text: #FFFFFF; --warning-text: #000000; --info-text: #000000;}</style>
+
+  <script>
+      function confirmSignOut() {
+        // Display a confirmation dialog
+        if (confirm("Are you sure you want to sign out?")) {
+            // If user confirms, send an AJAX request to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url 'sign_out' %}', true); // Replace 'sign_out' with your Django sign-out endpoint
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}'); // Add CSRF token if required
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle successful sign-out response
+                    window.location.href = '/'; // Redirect to the homepage or any other page
+                }
+            };
+            xhr.send();
+        }
+    
+    }
+</script>
+
 </head>
 <body>
 
@@ -624,7 +645,7 @@
           </li>
           <li class="nav-item">
             {% if auth %}
-            <a class="nav-link link text-black display-4" href="{% url 'index' %}">Sign Out</a>
+            <a class="nav-link link text-black display-4" href="{% url 'index' %}" onclick= "confirmSignOut()">Sign Out</a>
           </li>
           <li class="nav-item">
             {% else %}
@@ -710,6 +731,12 @@
   padding-bottom: 4rem;
   background-color: white;
   }
+
+.voteDesc
+{
+font-size: 14px;
+
+}
 </style>
 <section class="people03 cid-u3rjROP91w" id="team-1-u3rjROP91w">
 	<div class="container-fluid">
@@ -731,8 +758,9 @@
 					<div class="item-content align-left">
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Adrian</strong></h6>
-						<p class="mbr-text mbr-fonts-style display-7">Unity Part</p>
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote</button></div>
+						<p class="mbr-text mbr-fonts-style display-7">Liberal Coalition</p>
+            <p class = "voteDesc">Adrian Reynolds is a strong proponent of individual freedoms and free-market principles. With a business background, Adrian advocates for lower taxes, reduced regulations, and policies to empower individuals to pursue economic opportunities. He defends personal privacy, Second Amendment rights, and promotes free trade.</p>
+            <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
 					</div>
 				</div>
 			</div>
@@ -745,7 +773,8 @@
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Luna</strong></h6>
 						<p class="mbr-text mbr-fonts-style display-7">Progressive Alliance</p>
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote</button></div>
+            <p class = "voteDesc">Luna Rodriguez is a dedicated advocate for social justice and environmental sustainability. With a background in community organizing and activism, Luna prioritizes policies to address inequalities and fight for marginalized communities. She aims to combat climate change, expand healthcare access, and reform criminal justice.</p>
+						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
 					</div>
 				</div>
 			</div>
@@ -757,8 +786,10 @@
 					<div class="item-content align-left">
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Ahmed</strong></h6>
-						<p class="mbr-text mbr-fonts-style display-7">Liberal Coalition</p>
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote</button></div>
+              <p class="mbr-text mbr-fonts-style display-7">Unity Party</p>
+              <p class = "voteDesc">Ahmed Johnson is a unifying leader committed to bridging political divides. With expertise in diplomacy, Ahmed promotes cooperation and consensus-building. He seeks to bridge partisan divides, promote civil discourse, and strengthen democratic institutions.</p>
+						
+						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
 					</div>
 				</div>
 			</div>
@@ -772,7 +803,8 @@
               <strong>Aiden</strong>
             </h6>
             <p class="mbr-text mbr-fonts-style display-7">Sovereign Front</p>
-			<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote</button></div>
+            <p class = "voteDesc">Aidan Carter is a defender of national sovereignty and traditional values. With a background in law enforcement and military service, Aidan prioritizes protecting borders, culture, and heritage. He supports traditional family values, immigration enforcement, and promoting national identity.</p>
+			<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
           </div>
         </div>
       </div>
