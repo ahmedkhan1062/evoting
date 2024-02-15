@@ -45,6 +45,9 @@
         }
     
     }
+
+    var buttons = document.querySelectorAll('.btn.btn-primary.display-7');
+
 </script>
 
 </head>
@@ -734,8 +737,17 @@
 
 .voteDesc
 {
-font-size: 14px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333; /* Dark gray color */
+  margin-bottom: 20px;
+}
 
+button.voted {
+  background-color: #ccc; 
+  color: #999; 
+ 
 }
 </style>
 <section class="people03 cid-u3rjROP91w" id="team-1-u3rjROP91w">
@@ -759,9 +771,60 @@ font-size: 14px;
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Adrian</strong></h6>
 						<p class="mbr-text mbr-fonts-style display-7">Liberal Coalition</p>
-            <p class = "voteDesc">Adrian Reynolds is a strong proponent of individual freedoms and free-market principles. With a business background, Adrian advocates for lower taxes, reduced regulations, and policies to empower individuals to pursue economic opportunities. He defends personal privacy, Second Amendment rights, and promotes free trade.</p>
-            <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
-					</div>
+            <p class = "voteDesc">Adrian is a pragmatic leader known for his dedication to public service and problem-solving abilities. With a background in economics and finance, he aims to strengthen the economy and create jobs for the community. Adrian values transparency and accountability in governance and strives to make meaningful changes that benefit all constituents.</p>
+            <div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "voteAdrian" type="submit" class="btn btn-primary display-7" data-message="Are you sure you want to vote for Adrian? Once submitted your vote cannot be changed.">Vote now</button></div>
+            <script>
+              document.getElementById('voteAdrian').addEventListener('click', function() {
+                  var idnum = "9710085111087";
+                 
+                  var data = {
+                      idnumber: idnum
+                      
+                      // Add more key-value pairs for additional inputs
+                  };
+                  fetch('process-vote/', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': getCookie('csrftoken')
+                      },
+                      body: JSON.stringify(data)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.message === "User has already voted") {
+                      alert("You have already voted");}
+                    else if (data.message === "Guest may not vote") {
+                        alert("Please sign in to cast a vote");}
+                        else if (data.message === "Vote successful") {
+                          var voteButton = document.getElementById('voteAdrian');
+                          voteButton.innerHTML = 'Vote Cast &#10003;'; // Checkmark character (Unicode)
+                          voteButton.disabled = true; // Disable the button
+                        voteButton.classList.add('voted');
+
+                    };
+                  
+                  } 
+                  )
+                  .catch(error => console.error('Error:', error));
+              });
+
+              function getCookie(name) {
+                  var cookieValue = null;
+                  if (document.cookie && document.cookie !== '') {
+                      var cookies = document.cookie.split(';');
+                      for (var i = 0; i < cookies.length; i++) {
+                          var cookie = cookies[i].trim();
+                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                          }
+                      }
+                  }
+                  return cookieValue;
+              }
+          </script>
+          </div>
 				</div>
 			</div>
 			<div class="item features-image col-12 col-md-6 col-lg-3">
@@ -773,9 +836,57 @@ font-size: 14px;
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Luna</strong></h6>
 						<p class="mbr-text mbr-fonts-style display-7">Progressive Alliance</p>
-            <p class = "voteDesc">Luna Rodriguez is a dedicated advocate for social justice and environmental sustainability. With a background in community organizing and activism, Luna prioritizes policies to address inequalities and fight for marginalized communities. She aims to combat climate change, expand healthcare access, and reform criminal justice.</p>
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
-					</div>
+            <p class = "voteDesc">Luna is a visionary leader with a passion for innovation and progress. She believes in creating a brighter future for all citizens through sustainable development and technological advancements. With her strong leadership skills and commitment to social justice, Luna aims to build a more inclusive society where everyone has equal opportunities to thrive.
+
+            </p>
+						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "voteLuna" type="submit" class="btn btn-primary display-7" data-message="Are you sure you want to vote for Luna? Once submitted your vote cannot be changed.">Vote now</button></div>
+            <script>
+              document.getElementById('voteLuna').addEventListener('click', function() {
+                  var idnum = "9810085111087";
+                 
+                  var data = {
+                      idnumber: idnum
+                      
+                      // Add more key-value pairs for additional inputs
+                  };
+                  fetch('process-vote/', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': getCookie('csrftoken')
+                      },
+                      body: JSON.stringify(data)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.message === "User has already voted") {
+                      alert("You have already voted");}
+                    else if (data.message === "Guest may not vote") {
+                        alert("Please sign in to cast a vote");
+
+                    };
+                  
+                  } 
+                  )
+                  .catch(error => console.error('Error:', error));
+              });
+
+              function getCookie(name) {
+                  var cookieValue = null;
+                  if (document.cookie && document.cookie !== '') {
+                      var cookies = document.cookie.split(';');
+                      for (var i = 0; i < cookies.length; i++) {
+                          var cookie = cookies[i].trim();
+                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                          }
+                      }
+                  }
+                  return cookieValue;
+              }
+          </script>
+          </div>
 				</div>
 			</div>
 			<div class="item features-image col-12 col-md-6 col-lg-3">
@@ -787,10 +898,57 @@ font-size: 14px;
 						<h6 class="item-subtitle mbr-fonts-style display-5">
 							<strong>Ahmed</strong></h6>
               <p class="mbr-text mbr-fonts-style display-7">Unity Party</p>
-              <p class = "voteDesc">Ahmed Johnson is a unifying leader committed to bridging political divides. With expertise in diplomacy, Ahmed promotes cooperation and consensus-building. He seeks to bridge partisan divides, promote civil discourse, and strengthen democratic institutions.</p>
+              <p class = "voteDesc">Ahmed is a compassionate advocate for community empowerment and social welfare. With his background in social work, he is committed to addressing inequality and supporting marginalized groups. Ahmed prioritizes education, healthcare, and affordable housing to improve the quality of life for everyone in the community.</p>
 						
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
-					</div>
+						<div  class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "voteAhmed" type="submit" class="btn btn-primary display-7" data-message="Are you sure you want to vote for Ahmed? Once submitted your vote cannot be changed.">Vote now</button></div>
+            <script>
+              document.getElementById('voteAhmed').addEventListener('click', function() {
+                  var idnum = "9910085111087";
+                 
+                  var data = {
+                      idnumber: idnum
+                      
+                      // Add more key-value pairs for additional inputs
+                  };
+                  fetch('process-vote/', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': getCookie('csrftoken')
+                      },
+                      body: JSON.stringify(data)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.message === "User has already voted") {
+                      alert("You have already voted");}
+                    else if (data.message === "Guest may not vote") {
+                        alert("Please sign in to cast a vote");
+
+                    };
+                  
+                  } 
+                  )
+                  .catch(error => console.error('Error:', error));
+              });
+
+              function getCookie(name) {
+                  var cookieValue = null;
+                  if (document.cookie && document.cookie !== '') {
+                      var cookies = document.cookie.split(';');
+                      for (var i = 0; i < cookies.length; i++) {
+                          var cookie = cookies[i].trim();
+                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                          }
+                      }
+                  }
+                  return cookieValue;
+              }
+          </script>
+          
+          </div>
 				</div>
 			</div>
       <div class="item features-image col-12 col-md-6 col-lg-3">
@@ -803,9 +961,55 @@ font-size: 14px;
               <strong>Aiden</strong>
             </h6>
             <p class="mbr-text mbr-fonts-style display-7">Sovereign Front</p>
-            <p class = "voteDesc">Aidan Carter is a defender of national sovereignty and traditional values. With a background in law enforcement and military service, Aidan prioritizes protecting borders, culture, and heritage. He supports traditional family values, immigration enforcement, and promoting national identity.</p>
-			<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button type="submit" class="btn btn-primary display-7">Vote now</button></div>
-          </div>
+            <p class = "voteDesc">Aidan is a charismatic leader with a bold vision for the future. With a focus on environmental sustainability and renewable energy, he aims to protect the planet for future generations. Aidan is a strong advocate for climate action and believes in the importance of investing in green technologies to combat climate change and preserve natural resources.</p>
+			<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><button id = "voteAidan" type="submit" class="btn btn-primary display-7" data-message="Are you sure you want to vote for Aidan? Once submitted your vote cannot be changed.">Vote now</button></div>
+      <script>
+        document.getElementById('voteAidan').addEventListener('click', function() {
+            var idnum = "9610085111087";
+           
+            var data = {
+                idnumber: idnum
+                
+                // Add more key-value pairs for additional inputs
+            };
+            fetch('process-vote/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.message === "User has already voted") {
+                alert("You have already voted");}
+              else if (data.message === "Guest may not vote") {
+                  alert("Please sign in to cast a vote");
+
+              };
+            
+            } 
+            )
+            .catch(error => console.error('Error:', error));
+        });
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>     
+    </div>
         </div>
       </div>
 		</div>

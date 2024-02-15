@@ -25,4 +25,6 @@ urlpatterns = [
      path('process-registration/', views.recieveRegistration, name='registration_data'),
      path('process-login/', views.recieveLogin, name='login_data'),
      path('process-signOut/', views.signOut, name = 'sign_out'),
+     path('process-vote/', views.submitVote, name="submit_vote"),
+     path('fetch-polldata/', views.refreshPoll, name = "refresh_poll"),
 ]

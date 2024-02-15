@@ -1,9 +1,9 @@
 from datetime import datetime
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from .models import person
-from .models import LoginRequest
+from .models import LoginRequest, Vote
 import json
 
 from firebase_admin import db
@@ -18,6 +18,7 @@ signedPic = "assets/images/usersign.jpg"
 guestPic = "assets/images/userpic.jpg"
 context = {
                 'auth' : False,
+                'id': "",
                 'username': "Guest",
                 'signedPic': guestPic,
                         }
@@ -40,17 +41,52 @@ def login(request):
     
     return render(request, "page_login.html", context)
 
+
+def refreshPoll(request):
+        labels, results = Vote.returnAllVotes()
+        
+        print(labels)
+        print(results)
+        combined_data = {'labels': labels, 'data': results}
+        return JsonResponse(combined_data)
+
 def signOut(request):
     if request.method == 'POST':
         global context
         context = {
             'auth': False,
+            'id': "",
             'username': "Guest",
             'signedPic': guestPic,
                     }
         return JsonResponse({'message': 'GoVote'})
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
+def submitVote(request):
+    if request.method == 'POST':
+        
+        raw_data = request.body
+
+        # Decode from bytes to string
+        decoded_data = raw_data.decode('utf-8')
+
+        
+        # Parse as JSON
+        posted_data = json.loads(decoded_data)
+        candidateID = posted_data['idnumber']
+        print(candidateID)
+        print(context['id'])
+        result = Vote.setVote(context['id'], candidateID)
+        
+        if  result == "Success":
+            return JsonResponse({'message': 'Vote successful'})
+        
+        elif result == "alreadyvoted":
+            return  JsonResponse({'message': 'User has already voted'})
+        
+        else: return JsonResponse({'message': 'Guest may not vote'})
+    
 
 def recieveRegistration(request):
     if request.method == 'POST':
@@ -116,6 +152,7 @@ def recieveLogin(request):
             global context
             context = {
                 'auth': True,
+                'id': idnumber,
                 'username': LoginRequest.fetchUser(idnumber),
                 'signedPic': signedPic,
                         }

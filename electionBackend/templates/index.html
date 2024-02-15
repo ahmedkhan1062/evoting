@@ -28,6 +28,9 @@
   
 
   <style>:root{ --background: #EEF1F4; --dominant-color: #577590; --primary-color: #F3722C; --secondary-color: #43AA8B; --success-color: #25C77C; --danger-color: #C92333; --warning-color: #ECB100; --info-color: #0CBCE0; --background-text: #000000; --dominant-text: #FFFFFF; --primary-text: #000000; --secondary-text: #FFFFFF; --success-text: #000000; --danger-text: #FFFFFF; --warning-text: #000000; --info-text: #000000;}</style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
 
@@ -765,14 +768,23 @@
                       <canvas id="myChart"></canvas>
 
                       <script>
-                        // Mock data (replace with actual data)
-                        const pollResults = {
-                            labels: ['Adrian', 'Luna', 'Ahmed', 'Aiden'],
-                            data: [25, 80, 35, 45]
-                        };
-                        
-                        // Create chart
-                        const ctx = document.getElementById('myChart').getContext('2d');
+                        var Labels=[];
+                        var Data = [];
+                        $(document).ready(function() {
+                          // Make AJAX request
+                          $.ajax({
+                              url: 'fetch-polldata/',
+                              type: 'GET',
+                              success: function(response) {
+                                  // Handle successful response
+                                  console.log(response.labels); // Access list1
+                                  console.log(response.data); // Access list2
+                                  // Update DOM with received data
+                                  const pollResults = {
+                                    labels: response.labels,
+                                    data: response.data
+                                };
+                                const ctx = document.getElementById('myChart').getContext('2d');
                         const myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
@@ -819,7 +831,14 @@
                                 }
                             }
                         });
-                        </script>
+                              },
+                              error: function(xhr, status, error) {
+                                  // Handle error
+                                  console.error(xhr.responseText);
+                              }
+                          });
+                      });
+              </script>
 
 
                         <h4 class="card-title mbr-fonts-style display-2">

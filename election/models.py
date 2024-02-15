@@ -16,6 +16,7 @@ class person:
         self.tempPass = tempPass
         self.confirmPass = confirmPass
         self.password = ""
+        self.voteStatus = False
         
     #Method to check if the two passwords entered match
     def checkPassword(self):
@@ -24,6 +25,7 @@ class person:
             return True
         else:
             return False
+    
         
     #Method to check validity of SA id number
     def checkID(self):
@@ -119,6 +121,48 @@ class LoginRequest:
             return username
         else:
             return "Guest"
+
+class Vote:
+    def setVote(userID, candidateID):
+        if userID == "":
+            return "Error"
+        else:
+            voterbase = db.collection('People').document(userID) 
+            status = voterbase.get()
+            if status.get('voteStatus') == True:
+                return "alreadyvoted"
+            else:
+                voterbase.update({'voteStatus': True})
+    
+                candidatebase = db.collection('Candidates').document(candidateID)
+                vote_count = candidatebase.get()
+                totalVotes = vote_count.get('voteCount')
+                totalVotes = totalVotes + 1
+                
+                candidatebase.update({'voteCount': totalVotes})
+                
+                return "Success"
+    
+    def returnAllVotes():
+        candidatebase = db.collection('Candidates')
+        
+        pollLabels = []
+        pollResults = []
+        
+        polldata = candidatebase.stream()
+        
+        for candidate in polldata:
+    # Extract the value of a single attribute from each document
+            candidateName = candidate.to_dict().get('firstName')
+            pollCount = candidate.to_dict().get('voteCount')
+            pollLabels.append(candidateName)
+            pollResults.append(pollCount)
+            
+        return pollLabels, pollResults
+        
+    
+        
+    
         
 
             
