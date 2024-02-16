@@ -728,7 +728,9 @@ input.error {
                           </div>
 						            <div class="col-12 form-group mb-3" data-for="Email">
                             <input type="email" name="url" placeholder="Email Address" data-form-field="email" class="form-control" value="" id="Email" required>
-                        </div>
+                            <br>
+                            <span id="emailError" class="error-message"></span>
+                          </div>
 
                         <div class="col-12 form-group mb-3" data-for="Password">
                           <input type="password" name="password" placeholder="Password" data-form-field="password" class="form-control" value="" id="Password" required>
@@ -788,6 +790,16 @@ input.error {
                                           document.getElementById('ConfirmPassword').classList.add('error');}
                                           
 
+
+                                          else if (data.message === "Please enter a valid email address"){
+                                            document.getElementById('ID').classList.remove('error');
+                                            document.getElementById('Password').classList.remove('error');
+                                          document.getElementById('ConfirmPassword').classList.remove('error');
+                                            document.getElementById('idError').innerText = "";
+                                            document.getElementById('passwordError').innerText = "";
+                                            document.getElementById('emailError').innerText = data.message;
+                                              document.getElementById('Email').classList.add('error');}
+
                                         else if (data.message === "Your account already exists, please try logging in"){
                                           document.getElementById('LoginError').innerText = data.message;
                                           document.getElementById('passwordError').innerText = "";
@@ -795,6 +807,7 @@ input.error {
                                           document.getElementById('ID').classList.remove('error');
                                           document.getElementById('Password').classList.remove('error');
                                           document.getElementById('ConfirmPassword').classList.remove('error');
+                                          document.getElementById('Email').classList.remove('error');
                                       };
                                     }
                                       

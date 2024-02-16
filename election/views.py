@@ -2,8 +2,8 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
-from .models import person
-from .models import LoginRequest, Vote
+from .models import Person
+from .models import DatabaseMethods, Vote
 import json
 
 from firebase_admin import db
@@ -22,11 +22,7 @@ context = {
                 'username': "Guest",
                 'signedPic': guestPic,
                         }
-# Read data
-#data = ref.get()
 
-# Write data
-#ref.set({'key': 'value'})
 
 def index(request):
     return render(request, "index.html", context)
@@ -109,8 +105,10 @@ def recieveRegistration(request):
         password= posted_data['password']
         conPass= posted_data['confirmpass']
         
-        voter = person(firstname, surname, idnumber, email, password, conPass)
+        voter = Person(firstname, surname, idnumber, email, password, conPass)
         
+        if voter.checkEmail() == False:
+            return JsonResponse({'message': 'Please enter a valid email address'}, status = 400)
         
         if voter.checkID() == False:
             return JsonResponse({'message': 'Please enter a valid South African identification number'}, status = 400)
@@ -120,7 +118,6 @@ def recieveRegistration(request):
             return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
         
         else: 
-            #print(voter.postNewUserToDatabase())
             if voter.postNewUserToDatabase() == "Exists":
                 return JsonResponse({'message': 'Your account already exists, please try logging in'}, status = 400)
                 
@@ -147,14 +144,14 @@ def recieveLogin(request):
         idnumber = posted_data['idnumber']
         password = posted_data['password']
         
-        if LoginRequest.confirmLogin(idnumber, password) == "Success":
+        if DatabaseMethods.confirmLogin(idnumber, password) == "Success":
             global status 
             status = "sign" 
             global context
             context = {
                 'auth': True,
                 'id': idnumber,
-                'username': LoginRequest.fetchUser(idnumber),
+                'username': DatabaseMethods.fetchUser(idnumber),
                 'signedPic': signedPic,
                         }
             #return render(request, 'page_login.html', context)

@@ -4,12 +4,13 @@ from firebase_admin import db
 from firebase_admin import firestore
 from django.db import transaction
 import bcrypt
+import requests
 
 # Get a Firestore client
 db = firestore.client()
 
 # Create your models here.
-class person:
+class Person:
     def __init__(self, firstname, surname, id,email, tempPass, confirmPass):
         self.firstname = firstname
         self.surname = surname
@@ -28,7 +29,17 @@ class person:
         else:
             return False
     
-        
+    
+    def checkEmail(self):
+        response = requests.get('https://api.mailcheck.ai/email/'+self.email)
+
+        data = response.json()
+        print(data)
+        if data['disposable'] == False:
+            return True
+        else:
+            return False
+    
     #Method to check validity of SA id number
     def checkID(self):
         # Check if the ID number is of correct length
@@ -76,12 +87,13 @@ class person:
             return False
         
     def postNewUserToDatabase(self):
-        hashedPass,salt = LoginRequest.hash_password(self.password)
+        hashedPass,salt = DatabaseMethods.hash_password(self.password)
         data = {
                 'firstName': self.firstname,
                 'secondName': self.surname,
                 'id': self.id,
                 'email': self.email,
+                'voteStatus': False,
                 'password': hashedPass,
                 'salt': salt,
                 
@@ -94,8 +106,11 @@ class person:
             newUser.set(data)
             return "Success"
         
+
+#**************************DATABASE FUNCTIONS****************************
         
-class LoginRequest:
+class DatabaseMethods:
+    
        
     def confirmLogin( userID, userPassword):
         document = db.collection('People').document(userID)
