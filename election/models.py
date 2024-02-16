@@ -2,6 +2,8 @@ from datetime import datetime
 from django.db import models
 from firebase_admin import db
 from firebase_admin import firestore
+from django.db import transaction
+import bcrypt
 
 # Get a Firestore client
 db = firestore.client()
@@ -74,12 +76,14 @@ class person:
             return False
         
     def postNewUserToDatabase(self):
+        hashedPass,salt = LoginRequest.hash_password(self.password)
         data = {
                 'firstName': self.firstname,
                 'secondName': self.surname,
                 'id': self.id,
                 'email': self.email,
-                'password': self.password,
+                'password': hashedPass,
+                'salt': salt,
                 
                 }
             
@@ -103,7 +107,11 @@ class LoginRequest:
         if doc_values.exists:
             # Get the value of the specified field
             savedPassword = doc_values.get('password')
-            if savedPassword == userPassword:
+            savedSalt = doc_values.get('salt')
+            
+            hashedUserPassword = bcrypt.hashpw(userPassword.encode('utf-8'), savedSalt)
+            
+            if savedPassword == hashedUserPassword:
                 return "Success"
             else:
                 return "Error"
@@ -121,8 +129,19 @@ class LoginRequest:
             return username
         else:
             return "Guest"
+        
+    def hash_password(password, salt=None):
+        # Generate a salt if not provided
+        if salt is None:
+            salt = bcrypt.gensalt()
+
+        # Hash the password with the salt
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+        return hashed_password, salt
 
 class Vote:
+    @transaction.atomic
     def setVote(userID, candidateID):
         if userID == "":
             return "Error"

@@ -124,6 +124,7 @@ def recieveRegistration(request):
             if voter.postNewUserToDatabase() == "Exists":
                 return JsonResponse({'message': 'Your account already exists, please try logging in'}, status = 400)
                 
+            else: return JsonResponse("Success")
     else:
         return JsonResponse({'error': 'Invalid request method'})
     
