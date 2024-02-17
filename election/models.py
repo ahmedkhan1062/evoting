@@ -34,8 +34,9 @@ class Person:
         response = requests.get('https://api.mailcheck.ai/email/'+self.email)
 
         data = response.json()
-        print(data)
-        if data['disposable'] == False:
+        if data['status'] == 400:
+            return False
+        elif data['disposable'] == False:
             return True
         else:
             return False

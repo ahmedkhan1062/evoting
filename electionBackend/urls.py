@@ -27,4 +27,5 @@ urlpatterns = [
      path('process-signOut/', views.signOut, name = 'sign_out'),
      path('process-vote/', views.submitVote, name="submit_vote"),
      path('fetch-polldata/', views.refreshPoll, name = "refresh_poll"),
+    
 ]

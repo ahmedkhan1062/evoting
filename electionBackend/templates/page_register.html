@@ -808,7 +808,14 @@ input.error {
                                           document.getElementById('Password').classList.remove('error');
                                           document.getElementById('ConfirmPassword').classList.remove('error');
                                           document.getElementById('Email').classList.remove('error');
-                                      };
+                                      }
+                                      
+                                      else if (data.message === "Success"){
+                                        alert("Registration Successful");
+                                        window.location.href = "{% url 'page_login' %}";
+                                    }
+                                      
+                                      ;
                                     }
                                       
                                     )
