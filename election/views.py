@@ -16,26 +16,20 @@ db = firestore.client()
 #ref = db.reference('/')
 signedPic = "assets/images/usersign.jpg"
 guestPic = "assets/images/userpic.jpg"
-context = {
-                'auth' : False,
-                'id': "",
-                'username': "Guest",
-                'signedPic': guestPic,
-                        }
 
 
 def index(request):
-    return render(request, "index.html", context)
+    return render(request, "index.html")
 
 def vote(request):
-    return render(request, "page_vote.html", context)
+    return render(request, "page_vote.html")
 
 def register(request):
-    return render(request, "page_register.html", context)
+    return render(request, "page_register.html")
 
 def login(request):
     
-    return render(request, "page_login.html", context)
+    return render(request, "page_login.html")
 
 
 def refreshPoll(request):
@@ -48,13 +42,6 @@ def refreshPoll(request):
 
 def signOut(request):
     if request.method == 'POST':
-        global context
-        context = {
-            'auth': False,
-            'id': "",
-            'username': "Guest",
-            'signedPic': guestPic,
-                    }
         return JsonResponse({'message': 'GoVote'})
     else:
         return JsonResponse({'error': 'Invalid request method'})
@@ -70,10 +57,9 @@ def submitVote(request):
         
         # Parse as JSON
         posted_data = json.loads(decoded_data)
-        candidateID = posted_data['idnumber']
-        print(candidateID)
-        print(context['id'])
-        result = Vote.setVote(context['id'], candidateID)
+        candidateID = posted_data['candidate']
+        voterID = posted_data['voter']
+        result = Vote.setVote(voterID, candidateID)
         
         if  result == "Success":
             return JsonResponse({'message': 'Vote successful'})
@@ -145,17 +131,16 @@ def recieveLogin(request):
         password = posted_data['password']
         
         if DatabaseMethods.confirmLogin(idnumber, password) == "Success":
-            global status 
-            status = "sign" 
-            global context
-            context = {
-                'auth': True,
-                'id': idnumber,
+            userData = {
+                'Login': "success",
+                'ID': idnumber,
                 'username': DatabaseMethods.fetchUser(idnumber),
-                'signedPic': signedPic,
-                        }
-            #return render(request, 'page_login.html', context)
-            return JsonResponse({'message': 'GoVote'})
+                'voteStatus' : False,
+                'gender' : 'm',
+            }
+            
+            #userPacket = json.loads(userData)
+            return JsonResponse({'message': userData})
         else:
             return JsonResponse({'message': 'Incorrect ID number or password'}, status = 400)
             

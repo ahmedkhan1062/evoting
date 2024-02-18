@@ -31,6 +31,68 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+  <script>
+    function deleteCookie(name) {
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+  
+    function getUserCookie(name) {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+              // Extract the value from the cookie string
+              var cookieValue = cookie.substring(name.length + 1);
+              // Decode the URI-encoded value
+              return decodeURIComponent(cookieValue);
+          }
+      }
+      // If the cookie with the given name is not found, return null
+      return null;
+  }
+    function getUserDataFromCookie() {
+      // Get the value of the 'user_data' cookie
+      var userDataCookie = getUserCookie('user_data');
+      if (userDataCookie) {
+          // Parse the JSON string stored in the cookie
+          return JSON.parse(userDataCookie);
+      }
+      return null;
+
+      userCookie = getUserDataFromCookie();
+
+      const userName = userCookie.name;
+      const voteStatus = userCookie.votestatus;
+      const gender = userCookie.gender;
+
+      if (username) {
+        document.getElementById('userNameText').textContent = userName;
+    }
+
+    
+
+  }
+        function confirmSignOut() {
+          // Display a confirmation dialog
+          if (confirm("Are you sure you want to sign out?")) {
+              // If user confirms, send an AJAX request to the server
+              deleteCookie('user_data');
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'sign_out' %}', true); // Replace 'sign_out' with your Django sign-out endpoint
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}'); // Add CSRF token if required
+              xhr.onreadystatechange = function() {
+                  if (xhr.readyState === 4 && xhr.status === 200) {
+                      // Handle successful sign-out response
+                      window.location.href = '/'; // Redirect to the homepage or any other page
+                  }
+              };
+              xhr.send();
+          }
+      
+      }
+
+  </script>
+
 </head>
 <body>
 
@@ -627,28 +689,42 @@
         </div>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <script>
+          var username = getUserCookie.name;
+        </script>
+
         <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
           <li class="nav-item">
             <a class="nav-link link text-black display-4" href="{% url 'page_vote' %}">Vote</a>
           </li>
           <li class="nav-item">
-            {% if auth %}
-            <a class="nav-link link text-black display-4" href="{% url 'index' %}">Sign Out</a>
+            <a id = "navSignOut" class="nav-link link text-black display-4" href="{% url 'index' %}" onclick= "confirmSignOut()">Sign Out</a>
           </li>
           <li class="nav-item">
-            {% else %}
-            <a class="nav-link link text-black display-4" href="{% url 'page_login' %}">Login</a>
+            <a id = "navLogin" class="nav-link link text-black display-4" href="{% url 'page_login' %}">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link link text-black display-4" href="{% url 'page_register' %}"
+            <a id="navRegister" class="nav-link link text-black display-4" href="{% url 'page_register' %}"
               aria-expanded="false">Register</a>
           </li>
-          {% endif %}
         </ul>
         <div> <a href="{% url 'index' %}">
-						<img src="{% static signedPic %}" style="height: 3.3rem; width: 3.3rem; text-align: right;">
+						<img id = "userPicture" src="{% static 'assets/images/userpic.jpg' %}" style="height: 3.3rem; width: 3.3rem; text-align: right;">
 			</a>
-			<h6 style = "text-align: center;">{{ username|default:"Guest" }}</h6>
+			<h6 id = "userNameText" style = "text-align: center;">Guest</h6>
+      <script>
+        userCookie = getUserDataFromCookie();
+        if (userCookie) {
+        const userName = userCookie.name;
+        
+          document.getElementById('userNameText').textContent = userName;
+          document.getElementById('userPicture').src = "{% static 'assets/images/usersign.jpg' %}";
+          document.getElementById('navLogin').style.display = "none";
+          document.getElementById('navRegister').style.display = "none";
+          document.getElementById('navSignOut').style.display = "block";
+      }
+      else {document.getElementById('navSignOut').style.display = "none";}
+    </script>
       </div>
       </div>
     </div>
