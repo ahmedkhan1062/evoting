@@ -668,11 +668,11 @@
       <div class="navbar-brand">
         <span class="navbar-logo">
 					<a href="{% url 'index' %}">
-						<img src="{% static 'assets/images/photo-1595265616410-a6119ff0c87e.jpeg' %}" style="height: 4.3rem;">
+						<img src="{% static 'assets/images/logo.png' %}" style="height: 4.3rem;">
 					</a>
 				</span>
 				<span class="navbar-caption-wrap">
-          <a class="navbar-caption text-black display-4" href="{% url 'index' %}">Electoral Commision of South Africa</a>
+          <a class="navbar-caption text-black display-4" href="{% url 'index' %}">eVoting</a>
         </span>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -837,7 +837,14 @@ button.voted {
             <script>
               document.getElementById('voteAdrian').addEventListener('click', function() {
                   var candidateID = "9710085111087";
-                  var voterID = getUserDataFromCookie().id;
+                  var voterCookie = getUserDataFromCookie();
+                  if (voterCookie){
+                    var voterID = voterCookie.id;
+                  }
+                  else
+                  {
+                    var voterID = "Guest";
+                  }
                   
                   var data = {
                       candidate: candidateID,
@@ -905,7 +912,14 @@ button.voted {
             <script>
               document.getElementById('voteLuna').addEventListener('click', function() {
                   var candidateID = "9810085111087";
-                  var voterID = getUserDataFromCookie().id;
+                  var voterCookie = getUserDataFromCookie();
+                  if (voterCookie){
+                    var voterID = voterCookie.id;
+                  }
+                  else
+                  {
+                    var voterID = "Guest";
+                  }
                   
                   var data = {
                       candidate: candidateID,
@@ -973,7 +987,14 @@ button.voted {
             <script>
               document.getElementById('voteAhmed').addEventListener('click', function() {
                   var candidateID = "9910085111087";
-                  var voterID = getUserDataFromCookie().id;
+                  var voterCookie = getUserDataFromCookie();
+                  if (voterCookie){
+                    var voterID = voterCookie.id;
+                  }
+                  else
+                  {
+                    var voterID = "Guest";
+                  }
                   
                   var data = {
                       candidate: candidateID,
@@ -1043,7 +1064,14 @@ button.voted {
       <script>
         document.getElementById('voteAidan').addEventListener('click', function() {
             var candidateID = "9610085111087";
-            var voterID = getUserDataFromCookie().id;
+            var voterCookie = getUserDataFromCookie();
+                  if (voterCookie){
+                    var voterID = voterCookie.id;
+                  }
+                  else
+                  {
+                    var voterID = "Guest";
+                  }
             var data = {
                 candidate: candidateID,
                 voter: voterID

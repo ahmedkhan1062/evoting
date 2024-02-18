@@ -620,11 +620,11 @@
       <div class="navbar-brand">
         <span class="navbar-logo">
 					<a href="{% url 'index' %}">
-						<img src="{% static 'assets/images/photo-1595265616410-a6119ff0c87e.jpeg' %}" style="height: 4.3rem;">
+						<img src="{% static 'assets/images/logo.png' %}" style="height: 4.3rem;">
 					</a>
 				</span>
 				<span class="navbar-caption-wrap">
-          <a class="navbar-caption text-black display-4" href="{% url 'index' %}">Electoral Commision of South Africa</a>
+          <a class="navbar-caption text-black display-4" href="{% url 'index' %}">eVoting</a>
         </span>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -777,7 +777,7 @@
 						
 						<h5 align= "center" style="padding: 3%;" >Dont have an account?</h5>
 						
-						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><a class="btn btn-primary display-7" href="page_register.html">Register Now</a></div>
+						<div class="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn"><a class="btn btn-primary display-7" href="{% url 'page_register' %}">Register Now</a></div>
 						
 					</div>
                 </form>

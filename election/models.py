@@ -5,7 +5,7 @@ from firebase_admin import firestore
 from django.db import transaction
 import bcrypt
 import requests
-
+import re
 # Get a Firestore client
 db = firestore.client()
 
@@ -29,6 +29,29 @@ class Person:
         else:
             return False
     
+    def checkPasswordStrength(self):
+        # Rule 1: Password length should be at least 8 characters
+        if len(self.tempPass) < 8:
+            return False, "Password should be at least 8 characters long."
+
+        # Rule 2: Password should contain at least one uppercase letter
+        if not any(char.isupper() for char in self.tempPass):
+            return False, "Password should contain at least one uppercase letter."
+
+        # Rule 3: Password should contain at least one lowercase letter
+        if not any(char.islower() for char in self.tempPass):
+            return False, "Password should contain at least one lowercase letter."
+
+        # Rule 4: Password should contain at least one digit
+        if not any(char.isdigit() for char in self.tempPass):
+            return False, "Password should contain at least one digit."
+
+        # Rule 5: Password should contain at least one special character
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', self.tempPass):
+            return False, "Password should contain at least one special character."
+
+        # All rules passed
+        return True, "Password is strong."
     
     def checkEmail(self):
         response = requests.get('https://api.mailcheck.ai/email/'+self.email)
@@ -73,7 +96,7 @@ class Person:
             current_year = int(datetime.now().strftime("%Y")[-2:])
             #if not (current_year - 100 <= dob_year <= current_year):
                 #return False
-            print("bot")
+                
             # Check if gender number is in correct range
             if not (0 <= gender <= 9999):
                 return False
@@ -155,6 +178,8 @@ class DatabaseMethods:
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
 
         return hashed_password, salt
+
+#*************************VOTING FUNCTIONS****************************************
 
 class Vote:
     @transaction.atomic

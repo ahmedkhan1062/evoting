@@ -12,23 +12,20 @@ from firebase_admin import firestore
 # Get a Firestore client
 db = firestore.client()
 
-# Get a database reference
-#ref = db.reference('/')
-signedPic = "assets/images/usersign.jpg"
-guestPic = "assets/images/userpic.jpg"
-
 
 def index(request):
     return render(request, "index.html")
 
+
 def vote(request):
     return render(request, "page_vote.html")
+
 
 def register(request):
     return render(request, "page_register.html")
 
+
 def login(request):
-    
     return render(request, "page_login.html")
 
 
@@ -59,6 +56,10 @@ def submitVote(request):
         posted_data = json.loads(decoded_data)
         candidateID = posted_data['candidate']
         voterID = posted_data['voter']
+        
+        if voterID == "Guest":
+            return JsonResponse({'message': 'Guest may not vote'})
+        
         result = Vote.setVote(voterID, candidateID)
         
         if  result == "Success":
@@ -93,12 +94,16 @@ def recieveRegistration(request):
         
         voter = Person(firstname, surname, idnumber, email, password, conPass)
         
+        passStrenth, message = voter.checkPasswordStrength()
+        
         if voter.checkEmail() == False:
             return JsonResponse({'message': 'Please enter a valid email address'}, status = 400)
         
         if voter.checkID() == False:
             return JsonResponse({'message': 'Please enter a valid South African identification number'}, status = 400)
         
+        if passStrenth == False:
+            return JsonResponse({'message': message})
         
         elif voter.checkPassword() == False:
             return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
