@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
+    'https://evotingapp.onrender.com',
     # Add more allowed origins as needed
 ]
 
