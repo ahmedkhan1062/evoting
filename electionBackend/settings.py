@@ -90,7 +90,7 @@ TEMPLATES = [
 ]
 
 STATICFILES_DIRS =[BASE_DIR/"electionBackend"/ "static"]
-
+STATIC_ROOT = [BASE_DIR/"electionBackend"/ "static"]
 WSGI_APPLICATION = 'electionBackend.wsgi.application'
 
 
