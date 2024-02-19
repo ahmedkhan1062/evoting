@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-s@c(+y%*l0jw1m+%u+27-sqrx5#!o8yc=172)w%2n-d=nsp0jc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://evotingapp.onrender.com']
+ALLOWED_HOSTS = ['evotingapp.onrender.com']
 
 
 # Application definition
