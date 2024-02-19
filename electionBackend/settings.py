@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import firebase_admin.credentials
-
+import os
 from pathlib import Path
 
 from firebase_admin import credentials
