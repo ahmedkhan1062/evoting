@@ -103,7 +103,7 @@ def recieveRegistration(request):
             return JsonResponse({'message': 'Please enter a valid South African identification number'}, status = 400)
         
         if passStrenth == False:
-            return JsonResponse({'message': message})
+            return JsonResponse({'message': message}) 
         
         elif voter.checkPassword() == False:
             return JsonResponse({'message': 'Please ensure that the passwords match'}, status = 400)
