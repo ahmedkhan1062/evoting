@@ -1,2 +1,3 @@
 django
 firebase-admin
+django-cors-headers
