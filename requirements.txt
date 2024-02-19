@@ -2,3 +2,4 @@ django
 firebase-admin
 django-cors-headers
 bcrypt
+gunicorn
