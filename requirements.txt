@@ -1,4 +1,5 @@
 django
+os
 firebase-admin
 django-cors-headers
 bcrypt
